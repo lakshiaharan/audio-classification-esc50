@@ -1,0 +1,2 @@
+# Vercel Serverless Function requirements
+# Zero heavy binary dependencies required - ensures <5s Vercel builds and <1MB bundle

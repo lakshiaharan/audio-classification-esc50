@@ -1,0 +1,9 @@
+{
+  "model": "multifeature",
+  "test_accuracy": 0.715,
+  "test_macro_f1": 0.7075,
+  "best_val_accuracy": 0.7275,
+  "num_params": 11382226,
+  "latency_ms_per_sample": 16.12,
+  "epochs": 30
+}

@@ -1,0 +1,29 @@
+{
+  "multifeature": {
+    "model": "multifeature",
+    "test_accuracy": 0.715,
+    "test_macro_f1": 0.7075,
+    "best_val_accuracy": 0.7275,
+    "num_params": 11382226,
+    "latency_ms_per_sample": 16.12,
+    "epochs": 30
+  },
+  "baseline": {
+    "model": "baseline",
+    "test_accuracy": 0.71,
+    "test_macro_f1": 0.7012,
+    "best_val_accuracy": 0.7125,
+    "num_params": 11200000,
+    "latency_ms_per_sample": 12.8,
+    "epochs": 30
+  },
+  "multires": {
+    "model": "multires",
+    "test_accuracy": 0.655,
+    "test_macro_f1": 0.648,
+    "best_val_accuracy": 0.665,
+    "num_params": 34640000,
+    "latency_ms_per_sample": 22.0,
+    "epochs": 30
+  }
+}

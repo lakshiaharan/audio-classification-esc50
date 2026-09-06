@@ -1,0 +1,20 @@
+# Byte-compiled / cache
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Datasets & Large Audio
+ESC-50/
+ESC-50-master/
+test_sample.wav
+
+# Large binary feature caches & weights (GitHub 100MB limit)
+results/*.pt
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+scratch*
+benchmark*

@@ -1,0 +1,402 @@
+[
+  {
+    "id": "dog",
+    "name": "Dog Barking",
+    "icon": "🐕",
+    "group": "Animals",
+    "category": "dog",
+    "filename": "1-100032-A-0.wav"
+  },
+  {
+    "id": "rooster",
+    "name": "Rooster Crowing",
+    "icon": "🐓",
+    "group": "Animals",
+    "category": "rooster",
+    "filename": "1-26806-A-1.wav"
+  },
+  {
+    "id": "pig",
+    "name": "Pig Oinking",
+    "icon": "🐖",
+    "group": "Animals",
+    "category": "pig",
+    "filename": "1-208757-A-2.wav"
+  },
+  {
+    "id": "cow",
+    "name": "Cow Mooing",
+    "icon": "🐄",
+    "group": "Animals",
+    "category": "cow",
+    "filename": "1-16568-A-3.wav"
+  },
+  {
+    "id": "frog",
+    "name": "Frog Croaking",
+    "icon": "🐸",
+    "group": "Animals",
+    "category": "frog",
+    "filename": "1-15689-A-4.wav"
+  },
+  {
+    "id": "cat",
+    "name": "Cat Meowing",
+    "icon": "🐱",
+    "group": "Animals",
+    "category": "cat",
+    "filename": "1-34094-A-5.wav"
+  },
+  {
+    "id": "hen",
+    "name": "Hen Clucking",
+    "icon": "🐔",
+    "group": "Animals",
+    "category": "hen",
+    "filename": "1-18074-A-6.wav"
+  },
+  {
+    "id": "insects",
+    "name": "Insects / Bug",
+    "icon": "🦗",
+    "group": "Animals",
+    "category": "insects",
+    "filename": "1-17585-A-7.wav"
+  },
+  {
+    "id": "sheep",
+    "name": "Sheep Bleating",
+    "icon": "🐑",
+    "group": "Animals",
+    "category": "sheep",
+    "filename": "1-121951-A-8.wav"
+  },
+  {
+    "id": "crow",
+    "name": "Crow Cawing",
+    "icon": "🐦",
+    "group": "Animals",
+    "category": "crow",
+    "filename": "1-103298-A-9.wav"
+  },
+  {
+    "id": "rain",
+    "name": "Rain Shower",
+    "icon": "🌧️",
+    "group": "Nature",
+    "category": "rain",
+    "filename": "1-17367-A-10.wav"
+  },
+  {
+    "id": "sea_waves",
+    "name": "Sea Waves",
+    "icon": "🌊",
+    "group": "Nature",
+    "category": "sea_waves",
+    "filename": "1-28135-A-11.wav"
+  },
+  {
+    "id": "crackling_fire",
+    "name": "Crackling Fire",
+    "icon": "🔥",
+    "group": "Nature",
+    "category": "crackling_fire",
+    "filename": "1-17150-A-12.wav"
+  },
+  {
+    "id": "crickets",
+    "name": "Crickets Chirping",
+    "icon": "🦗",
+    "group": "Nature",
+    "category": "crickets",
+    "filename": "1-57316-A-13.wav"
+  },
+  {
+    "id": "chirping_birds",
+    "name": "Chirping Birds",
+    "icon": "🐦",
+    "group": "Nature",
+    "category": "chirping_birds",
+    "filename": "1-100038-A-14.wav"
+  },
+  {
+    "id": "water_drops",
+    "name": "Water Drops",
+    "icon": "💧",
+    "group": "Nature",
+    "category": "water_drops",
+    "filename": "1-12653-A-15.wav"
+  },
+  {
+    "id": "wind",
+    "name": "Wind Gusts",
+    "icon": "💨",
+    "group": "Nature",
+    "category": "wind",
+    "filename": "1-137296-A-16.wav"
+  },
+  {
+    "id": "pouring_water",
+    "name": "Pouring Water",
+    "icon": "🫗",
+    "group": "Nature",
+    "category": "pouring_water",
+    "filename": "1-118559-A-17.wav"
+  },
+  {
+    "id": "toilet_flush",
+    "name": "Toilet Flush",
+    "icon": "🚽",
+    "group": "Nature",
+    "category": "toilet_flush",
+    "filename": "1-20736-A-18.wav"
+  },
+  {
+    "id": "thunderstorm",
+    "name": "Thunderstorm",
+    "icon": "⚡",
+    "group": "Nature",
+    "category": "thunderstorm",
+    "filename": "1-101296-A-19.wav"
+  },
+  {
+    "id": "crying_baby",
+    "name": "Crying Baby",
+    "icon": "👶",
+    "group": "Human",
+    "category": "crying_baby",
+    "filename": "1-187207-A-20.wav"
+  },
+  {
+    "id": "sneezing",
+    "name": "Sneezing",
+    "icon": "🤧",
+    "group": "Human",
+    "category": "sneezing",
+    "filename": "1-26143-A-21.wav"
+  },
+  {
+    "id": "clapping",
+    "name": "Clapping Hands",
+    "icon": "👏",
+    "group": "Human",
+    "category": "clapping",
+    "filename": "1-104089-A-22.wav"
+  },
+  {
+    "id": "breathing",
+    "name": "Breathing",
+    "icon": "🫁",
+    "group": "Human",
+    "category": "breathing",
+    "filename": "1-18631-A-23.wav"
+  },
+  {
+    "id": "coughing",
+    "name": "Coughing",
+    "icon": "😷",
+    "group": "Human",
+    "category": "coughing",
+    "filename": "1-19111-A-24.wav"
+  },
+  {
+    "id": "footsteps",
+    "name": "Footsteps Walking",
+    "icon": "👣",
+    "group": "Human",
+    "category": "footsteps",
+    "filename": "1-155858-A-25.wav"
+  },
+  {
+    "id": "laughing",
+    "name": "Laughing",
+    "icon": "😄",
+    "group": "Human",
+    "category": "laughing",
+    "filename": "1-1791-A-26.wav"
+  },
+  {
+    "id": "brushing_teeth",
+    "name": "Brushing Teeth",
+    "icon": "🪥",
+    "group": "Human",
+    "category": "brushing_teeth",
+    "filename": "1-17092-A-27.wav"
+  },
+  {
+    "id": "snoring",
+    "name": "Snoring",
+    "icon": "💤",
+    "group": "Human",
+    "category": "snoring",
+    "filename": "1-20545-A-28.wav"
+  },
+  {
+    "id": "drinking_sipping",
+    "name": "Drinking / Sipping",
+    "icon": "🥤",
+    "group": "Human",
+    "category": "drinking_sipping",
+    "filename": "1-17295-A-29.wav"
+  },
+  {
+    "id": "door_wood_creaks",
+    "name": "Door Wood Creak",
+    "icon": "🚪",
+    "group": "Domestic",
+    "category": "door_wood_creaks",
+    "filename": "1-51805-A-33.wav"
+  },
+  {
+    "id": "mouse_click",
+    "name": "Mouse Click",
+    "icon": "🖱️",
+    "group": "Domestic",
+    "category": "mouse_click",
+    "filename": "1-118206-A-31.wav"
+  },
+  {
+    "id": "keyboard_typing",
+    "name": "Keyboard Typing",
+    "icon": "⌨️",
+    "group": "Domestic",
+    "category": "keyboard_typing",
+    "filename": "1-137-A-32.wav"
+  },
+  {
+    "id": "door_wood_knock",
+    "name": "Door Knocking",
+    "icon": "🚪",
+    "group": "Domestic",
+    "category": "door_wood_knock",
+    "filename": "1-101336-A-30.wav"
+  },
+  {
+    "id": "can_opening",
+    "name": "Can Opening",
+    "icon": "🥫",
+    "group": "Domestic",
+    "category": "can_opening",
+    "filename": "1-101404-A-34.wav"
+  },
+  {
+    "id": "washing_machine",
+    "name": "Washing Machine",
+    "icon": "🫧",
+    "group": "Domestic",
+    "category": "washing_machine",
+    "filename": "1-21896-A-35.wav"
+  },
+  {
+    "id": "vacuum_cleaner",
+    "name": "Vacuum Cleaner",
+    "icon": "🧹",
+    "group": "Domestic",
+    "category": "vacuum_cleaner",
+    "filename": "1-100210-A-36.wav"
+  },
+  {
+    "id": "clock_alarm",
+    "name": "Clock Alarm Ringing",
+    "icon": "⏰",
+    "group": "Domestic",
+    "category": "clock_alarm",
+    "filename": "1-13613-A-37.wav"
+  },
+  {
+    "id": "clock_tick",
+    "name": "Clock Ticking",
+    "icon": "⏱️",
+    "group": "Domestic",
+    "category": "clock_tick",
+    "filename": "1-21934-A-38.wav"
+  },
+  {
+    "id": "glass_breaking",
+    "name": "Glass Shattering",
+    "icon": "🍸",
+    "group": "Domestic",
+    "category": "glass_breaking",
+    "filename": "1-20133-A-39.wav"
+  },
+  {
+    "id": "helicopter",
+    "name": "Helicopter Blades",
+    "icon": "🚁",
+    "group": "Urban",
+    "category": "helicopter",
+    "filename": "1-172649-A-40.wav"
+  },
+  {
+    "id": "chainsaw",
+    "name": "Chainsaw Motor",
+    "icon": "🪚",
+    "group": "Urban",
+    "category": "chainsaw",
+    "filename": "1-116765-A-41.wav"
+  },
+  {
+    "id": "siren",
+    "name": "Siren Alarm",
+    "icon": "🚨",
+    "group": "Urban",
+    "category": "siren",
+    "filename": "1-31482-A-42.wav"
+  },
+  {
+    "id": "car_horn",
+    "name": "Car Horn Honk",
+    "icon": "🚗",
+    "group": "Urban",
+    "category": "car_horn",
+    "filename": "1-17124-A-43.wav"
+  },
+  {
+    "id": "engine",
+    "name": "Car Engine",
+    "icon": "🏎️",
+    "group": "Urban",
+    "category": "engine",
+    "filename": "1-18527-A-44.wav"
+  },
+  {
+    "id": "train",
+    "name": "Train Horn",
+    "icon": "🚆",
+    "group": "Urban",
+    "category": "train",
+    "filename": "1-119125-A-45.wav"
+  },
+  {
+    "id": "church_bells",
+    "name": "Church Bells",
+    "icon": "🔔",
+    "group": "Urban",
+    "category": "church_bells",
+    "filename": "1-13571-A-46.wav"
+  },
+  {
+    "id": "airplane",
+    "name": "Airplane Jet",
+    "icon": "✈️",
+    "group": "Urban",
+    "category": "airplane",
+    "filename": "1-11687-A-47.wav"
+  },
+  {
+    "id": "fireworks",
+    "name": "Fireworks Exploding",
+    "icon": "🎆",
+    "group": "Urban",
+    "category": "fireworks",
+    "filename": "1-115545-A-48.wav"
+  },
+  {
+    "id": "hand_saw",
+    "name": "Hand Saw",
+    "icon": "🪚",
+    "group": "Urban",
+    "category": "hand_saw",
+    "filename": "1-18810-A-49.wav"
+  }
+]

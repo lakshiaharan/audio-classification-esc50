@@ -1,0 +1,8 @@
+# Full local dependencies for PyTorch training, evaluation, and local server
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.0.0
+torchaudio>=2.0.0
+pandas>=2.0.0
+scikit-learn
+matplotlib
+seaborn

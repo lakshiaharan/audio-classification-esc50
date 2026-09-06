@@ -1,0 +1,10 @@
+{
+  "test_fold": 5,
+  "test_accuracy": 0.71,
+  "test_macro_f1": 0.7005894288404048,
+  "best_val_accuracy": 0.7475,
+  "num_params": 11195890,
+  "latency_ms_per_sample": 12.752049416303635,
+  "model": "baseline",
+  "epochs": 30
+}
