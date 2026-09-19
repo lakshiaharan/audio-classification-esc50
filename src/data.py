@@ -82,28 +82,44 @@ def load_audio(path):
         return wav, sr
 
 
-FEATURE_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "results", "esc50_features.pt")
-_GLOBAL_FEATURE_CACHE = None
+MULTIRES_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "results", "esc50_features.pt")
+STATIC_DELTA_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "results", "esc50_static_delta.pt")
+_FEATURE_CACHES = {}
 
 
-def precompute_and_cache_features(root_dir, cache_path=FEATURE_CACHE_PATH):
-    """Precompute all 2,000 multi-resolution mel-spectrograms and cache them."""
-    global _GLOBAL_FEATURE_CACHE
-    if _GLOBAL_FEATURE_CACHE is not None:
-        return _GLOBAL_FEATURE_CACHE
+def extract_static_delta_features(wav, sample_rate=SAMPLE_RATE, n_mels=N_MELS):
+    """Extract 3-channel [Static Mel, Delta 1 (Velocity), Delta 2 (Acceleration)]."""
+    mel_tf = torchaudio.transforms.MelSpectrogram(sample_rate=sample_rate, n_fft=1024, hop_length=512, n_mels=n_mels)
+    db_tf = torchaudio.transforms.AmplitudeToDB(top_db=80)
+    mel = db_tf(mel_tf(wav))
+    mel = (mel - mel.mean()) / (mel.std() + 1e-6)
+    delta1 = torchaudio.functional.compute_deltas(mel)
+    delta2 = torchaudio.functional.compute_deltas(delta1)
+    return torch.cat([mel, delta1, delta2], dim=0)
+
+
+def precompute_and_cache_features(root_dir, feature_type="multires", cache_path=None):
+    """Precompute and cache features (multires or static+delta)."""
+    global _FEATURE_CACHES
+    if cache_path is None:
+        cache_path = STATIC_DELTA_CACHE_PATH if feature_type == "multifeature" else MULTIRES_CACHE_PATH
+    
+    if cache_path in _FEATURE_CACHES:
+        return _FEATURE_CACHES[cache_path]
     
     if os.path.exists(cache_path):
         print(f"Loading precomputed features from {cache_path}...")
-        _GLOBAL_FEATURE_CACHE = torch.load(cache_path)
-        return _GLOBAL_FEATURE_CACHE
+        _FEATURE_CACHES[cache_path] = torch.load(cache_path)
+        return _FEATURE_CACHES[cache_path]
 
-    print("Precomputing multi-resolution mel-spectrograms for ESC-50 (one-time setup)...")
+    print(f"Precomputing {feature_type} features for ESC-50 (one-time setup)...")
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
     meta = pd.read_csv(os.path.join(root_dir, "meta", "esc50.csv"))
     audio_dir = os.path.join(root_dir, "audio")
-    clean_extractor = MultiResMelExtractor(sample_rate=SAMPLE_RATE, augment=False)
     
+    clean_extractor = MultiResMelExtractor(sample_rate=SAMPLE_RATE, augment=False)
     cache = {}
+    
     for idx in range(len(meta)):
         row = meta.iloc[idx]
         path = os.path.join(audio_dir, row.filename)
@@ -112,27 +128,33 @@ def precompute_and_cache_features(root_dir, cache_path=FEATURE_CACHE_PATH):
             wav = torchaudio.functional.resample(wav, sr, SAMPLE_RATE)
         if wav.shape[0] > 1:
             wav = wav.mean(dim=0, keepdim=True)
-        feat = clean_extractor(wav)  # (3, 64, 216)
+            
+        if feature_type == "multifeature":
+            feat = extract_static_delta_features(wav) # (3, 64, 431)
+        else:
+            feat = clean_extractor(wav)  # (3, 64, 216)
+            
         cache[row.filename] = feat.cpu()
         if (idx + 1) % 500 == 0 or (idx + 1) == len(meta):
             print(f"  Processed {idx + 1}/{len(meta)} clips...")
 
     torch.save(cache, cache_path)
     print(f"Saved feature cache to {cache_path} ({os.path.getsize(cache_path)/1e6:.1f} MB)")
-    _GLOBAL_FEATURE_CACHE = cache
-    return _GLOBAL_FEATURE_CACHE
+    _FEATURE_CACHES[cache_path] = cache
+    return _FEATURE_CACHES[cache_path]
 
 
 class ESC50Dataset(Dataset):
-    def __init__(self, root_dir, folds, extractor=None, sample_rate=SAMPLE_RATE):
+    def __init__(self, root_dir, folds, extractor=None, sample_rate=SAMPLE_RATE, feature_type="multires"):
         self.root_dir = root_dir
         meta = pd.read_csv(os.path.join(root_dir, "meta", "esc50.csv"))
         self.meta = meta[meta.fold.isin(folds)].reset_index(drop=True)
         self.sample_rate = sample_rate
+        self.feature_type = feature_type
         self.extractor = extractor or MultiResMelExtractor(sample_rate=sample_rate)
         self.classes = sorted(meta.category.unique())
         self.class_to_idx = {c: i for i, c in enumerate(self.classes)}
-        self.cache = precompute_and_cache_features(root_dir)
+        self.cache = precompute_and_cache_features(root_dir, feature_type=feature_type)
 
     def __len__(self):
         return len(self.meta)
@@ -153,14 +175,14 @@ class ESC50Dataset(Dataset):
         return feat, label
 
 
-def get_dataloaders(root_dir, batch_size=32, test_fold=5, val_fold=4, num_workers=0):
+def get_dataloaders(root_dir, batch_size=32, test_fold=5, val_fold=4, num_workers=0, feature_type="multires"):
     from torch.utils.data import DataLoader
     train_folds = [f for f in [1, 2, 3, 4, 5] if f not in (test_fold, val_fold)]
     train_extractor = MultiResMelExtractor(augment=True)
     eval_extractor = MultiResMelExtractor(augment=False)
-    train_ds = ESC50Dataset(root_dir, train_folds, train_extractor)
-    val_ds = ESC50Dataset(root_dir, [val_fold], eval_extractor)
-    test_ds = ESC50Dataset(root_dir, [test_fold], eval_extractor)
+    train_ds = ESC50Dataset(root_dir, train_folds, train_extractor, feature_type=feature_type)
+    val_ds = ESC50Dataset(root_dir, [val_fold], eval_extractor, feature_type=feature_type)
+    test_ds = ESC50Dataset(root_dir, [test_fold], eval_extractor, feature_type=feature_type)
     return (
         DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=num_workers),
         DataLoader(val_ds, batch_size=batch_size, shuffle=False, num_workers=num_workers),

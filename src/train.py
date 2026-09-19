@@ -95,19 +95,28 @@ def measure_latency(model, sample_input, device, n_runs=30):
 
 def train_one_split(args, device, test_fold, val_fold):
     train_loader, val_loader, test_loader, classes = get_dataloaders(
-        args.data_root, batch_size=args.batch_size, test_fold=test_fold, val_fold=val_fold)
+        args.data_root, batch_size=args.batch_size, test_fold=test_fold, val_fold=val_fold, feature_type=args.model)
     n_classes = len(classes)
 
+    pretrained = not args.no_pretrained
+    freeze_early = not args.unfreeze
+
     if args.model == 'multires':
-        model = MultiResAttentionNet(n_classes, pretrained=not args.no_pretrained).to(device)
+        model = MultiResAttentionNet(n_classes, pretrained=pretrained, freeze_early=freeze_early).to(device)
     elif args.model == 'multifeature':
-        model = MultiFeatureCoordNet(n_classes, pretrained=not args.no_pretrained).to(device)
+        model = MultiFeatureCoordNet(n_classes, pretrained=pretrained, freeze_early=freeze_early).to(device)
     else:
-        model = SingleResCNN(n_classes, pretrained=not args.no_pretrained).to(device)
+        model = SingleResCNN(n_classes, pretrained=pretrained, freeze_early=freeze_early).to(device)
 
     criterion = nn.CrossEntropyLoss()
-    trainable_params = [p for p in model.parameters() if p.requires_grad]
-    optimizer = torch.optim.AdamW(trainable_params, lr=args.lr, weight_decay=args.weight_decay)
+    if hasattr(model, 'get_param_groups') and (args.unfreeze or args.backbone_lr is not None):
+        backbone_lr = args.backbone_lr if args.backbone_lr is not None else args.lr * 0.1
+        param_groups = model.get_param_groups(head_lr=args.lr, backbone_lr=backbone_lr, weight_decay=args.weight_decay)
+        optimizer = torch.optim.AdamW(param_groups)
+    else:
+        trainable_params = [p for p in model.parameters() if p.requires_grad]
+        optimizer = torch.optim.AdamW(trainable_params, lr=args.lr, weight_decay=args.weight_decay)
+
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
 
     best_val_acc = 0.0
@@ -120,7 +129,7 @@ def train_one_split(args, device, test_fold, val_fold):
                                                train=False, n_classes=n_classes)
         scheduler.step()
 
-        print(f"[{args.model} fold(test={test_fold})] epoch {epoch:02d}/{args.epochs:02d} "
+        print(f"[{args.model} (pretrained={pretrained}, unfreeze={args.unfreeze}) fold(test={test_fold})] epoch {epoch:02d}/{args.epochs:02d} "
               f"train_loss={train_loss:.4f} train_acc={train_acc:.4f} "
               f"val_loss={val_loss:.4f} val_acc={val_acc:.4f} val_f1={val_f1:.4f}", flush=True)
 
@@ -143,64 +152,93 @@ def train_one_split(args, device, test_fold, val_fold):
         'best_val_accuracy': best_val_acc,
         'num_params': n_params,
         'latency_ms_per_sample': latency_ms,
+        'pretrained': pretrained,
+        'unfreeze': args.unfreeze,
     }
     return result, best_state
 
 
 def main():
-    p = argparse.ArgumentParser()
-    p.add_argument('--data_root', required=True)
+    p = argparse.ArgumentParser(description="Train and evaluate audio classification models on ESC-50")
+    p.add_argument('--data_root', required=True, help="Path to ESC-50 dataset root")
     p.add_argument('--model', choices=['multires', 'baseline', 'multifeature'], default='multifeature')
     p.add_argument('--epochs', type=int, default=30)
     p.add_argument('--batch_size', type=int, default=32)
-    p.add_argument('--lr', type=float, default=5e-4)
+    p.add_argument('--lr', type=float, default=5e-4, help="Learning rate (for classifier head or overall model)")
+    p.add_argument('--backbone_lr', type=float, default=None, help="Differential learning rate for backbone when unfreezing")
     p.add_argument('--weight_decay', type=float, default=5e-4)
-    p.add_argument('--mixup', action='store_true')
-    p.add_argument('--no_pretrained', action='store_true')
-    p.add_argument('--cv', action='store_true')
-    p.add_argument('--seed', type=int, default=42)
+    p.add_argument('--mixup', action='store_true', help="Enable Mixup data augmentation")
+    p.add_argument('--unfreeze', action='store_true', help="Unfreeze all early backbone layers for full end-to-end fine-tuning")
+    p.add_argument('--no_pretrained', action='store_true', help="Train from scratch with random initialization (ablation study)")
+    p.add_argument('--cv', action='store_true', help="Run 5-fold cross-validation")
+    p.add_argument('--seeds', type=int, nargs='+', default=[42], help="Random seeds to evaluate across (e.g. --seeds 42 123 999)")
+    p.add_argument('--seed', type=int, default=None, help="Single random seed (shorthand)")
     args = p.parse_args()
 
-    set_seed(args.seed)
+    if args.seed is not None:
+        args.seeds = [args.seed]
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     os.makedirs('results', exist_ok=True)
 
-    if args.cv:
-        fold_results = []
-        for test_fold in [1, 2, 3, 4, 5]:
-            val_fold = test_fold - 1 if test_fold > 1 else 5
-            metrics, best_state = train_one_split(args, device, test_fold, val_fold)
-            fold_results.append(metrics)
-            torch.save(best_state, f'results/{args.model}_fold{test_fold}_best.pt')
+    suffix = ""
+    if args.unfreeze:
+        suffix += "_unfrozen"
+    if args.no_pretrained:
+        suffix += "_scratch"
 
+    if args.cv:
         import statistics
-        accs = [r['test_accuracy'] for r in fold_results]
-        f1s = [r['test_macro_f1'] for r in fold_results]
+        all_seed_results = []
+        for seed in args.seeds:
+            set_seed(seed)
+            print(f"\n================ Running 5-Fold CV with Seed {seed} ================")
+            seed_fold_results = []
+            for test_fold in [1, 2, 3, 4, 5]:
+                val_fold = test_fold - 1 if test_fold > 1 else 5
+                metrics, best_state = train_one_split(args, device, test_fold, val_fold)
+                metrics['seed'] = seed
+                seed_fold_results.append(metrics)
+                torch.save(best_state, f'results/{args.model}{suffix}_seed{seed}_fold{test_fold}_best.pt')
+            all_seed_results.extend(seed_fold_results)
+
+        all_accs = [r['test_accuracy'] for r in all_seed_results]
+        all_f1s = [r['test_macro_f1'] for r in all_seed_results]
 
         summary = {
             'model': args.model,
-            'per_fold': fold_results,
-            'mean_test_accuracy': statistics.mean(accs),
-            'std_test_accuracy': statistics.stdev(accs),
-            'mean_test_macro_f1': statistics.mean(f1s),
-            'std_test_macro_f1': statistics.stdev(f1s),
-            'num_params': fold_results[0]['num_params'],
-            'latency_ms_per_sample': fold_results[0]['latency_ms_per_sample'],
+            'pretrained': not args.no_pretrained,
+            'unfrozen': args.unfreeze,
+            'seeds': args.seeds,
+            'n_runs': len(all_seed_results),
+            'per_run_results': all_seed_results,
+            'mean_test_accuracy': statistics.mean(all_accs),
+            'std_test_accuracy': statistics.stdev(all_accs) if len(all_accs) > 1 else 0.0,
+            'mean_test_macro_f1': statistics.mean(all_f1s),
+            'std_test_macro_f1': statistics.stdev(all_f1s) if len(all_f1s) > 1 else 0.0,
+            'num_params': all_seed_results[0]['num_params'],
+            'latency_ms_per_sample': all_seed_results[0]['latency_ms_per_sample'],
             'epochs': args.epochs,
         }
-        with open(f'results/{args.model}_metrics.json', 'w') as f:
+        with open(f'results/{args.model}{suffix}_metrics.json', 'w') as f:
             json.dump(summary, f, indent=2)
 
-        print(f"\n5-fold CV test accuracy: {summary['mean_test_accuracy']:.4f} +/- {summary['std_test_accuracy']:.4f}")
-        print(f"5-fold CV macro-F1: {summary['mean_test_macro_f1']:.4f} +/- {summary['std_test_macro_f1']:.4f}")
+        print(f"\n{'='*70}")
+        print(f"5-Fold CV Summary across {len(args.seeds)} seed(s) [{args.model}{suffix}]:")
+        print(f"Mean Test Accuracy : {summary['mean_test_accuracy']*100:.2f}% ± {summary['std_test_accuracy']*100:.2f}%")
+        print(f"Mean Macro-F1      : {summary['mean_test_macro_f1']:.4f} ± {summary['std_test_macro_f1']:.4f}")
+        print(f"{'='*70}\n")
 
     else:
+        seed = args.seeds[0]
+        set_seed(seed)
         metrics, best_state = train_one_split(args, device, test_fold=5, val_fold=4)
         metrics['model'] = args.model
         metrics['epochs'] = args.epochs
-        with open(f'results/{args.model}_metrics.json', 'w') as f:
+        metrics['seed'] = seed
+        with open(f'results/{args.model}{suffix}_metrics.json', 'w') as f:
             json.dump(metrics, f, indent=2)
-        torch.save(best_state, f'results/{args.model}_best.pt')
+        torch.save(best_state, f'results/{args.model}{suffix}_best.pt')
 
         print(f"\nFinal test accuracy: {metrics['test_accuracy']:.4f} | macro-F1: {metrics['test_macro_f1']:.4f}")
         print(f"Params: {metrics['num_params']:,} | Latency: {metrics['latency_ms_per_sample']:.2f} ms/sample")

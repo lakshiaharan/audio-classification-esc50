@@ -29,9 +29,9 @@ def make_resnet_backbone(pretrained=True, freeze_early=True):
 
 class SingleResCNN(nn.Module):
     # baseline - single mid-res mel spectrogram, pretrained resnet18
-    def __init__(self, n_classes=50, pretrained=True):
+    def __init__(self, n_classes=50, pretrained=True, freeze_early=True):
         super().__init__()
-        self.backbone, feat_dim = make_resnet_backbone(pretrained=pretrained)
+        self.backbone, feat_dim = make_resnet_backbone(pretrained=pretrained, freeze_early=freeze_early)
         self.classifier = nn.Sequential(
             nn.Dropout(0.4),
             nn.Linear(feat_dim, n_classes),
@@ -43,6 +43,14 @@ class SingleResCNN(nn.Module):
             x = x[:, 0:1, :, :]
         feat = self.backbone(x)
         return self.classifier(feat)
+
+    def get_param_groups(self, head_lr=5e-4, backbone_lr=5e-5, weight_decay=5e-4):
+        backbone_params = [p for p in self.backbone.parameters() if p.requires_grad]
+        head_params = [p for p in self.classifier.parameters() if p.requires_grad]
+        return [
+            {"params": backbone_params, "lr": backbone_lr, "weight_decay": weight_decay},
+            {"params": head_params, "lr": head_lr, "weight_decay": weight_decay},
+        ]
 
 
 class TimeFreqAttention(nn.Module):
@@ -64,9 +72,9 @@ class TimeFreqAttention(nn.Module):
 
 
 class ResBranch(nn.Module):
-    def __init__(self, pretrained=True):
+    def __init__(self, pretrained=True, freeze_early=True):
         super().__init__()
-        backbone, feat_dim = make_resnet_backbone(pretrained=pretrained)
+        backbone, feat_dim = make_resnet_backbone(pretrained=pretrained, freeze_early=freeze_early)
         self.stem = nn.Sequential(
             backbone.conv1, backbone.bn1, backbone.relu, backbone.maxpool,
             backbone.layer1, backbone.layer2, backbone.layer3, backbone.layer4,
@@ -84,10 +92,10 @@ class ResBranch(nn.Module):
 class MultiResAttentionNet(nn.Module):
     # fine/mid/coarse mel branches, each pretrained resnet18 + attention, fused with
     # a small gating network instead of just concatenating
-    def __init__(self, n_classes=50, pretrained=True):
+    def __init__(self, n_classes=50, pretrained=True, freeze_early=True):
         super().__init__()
         self.branches = nn.ModuleDict({
-            name: ResBranch(pretrained=pretrained) for name in ["fine", "mid", "coarse"]
+            name: ResBranch(pretrained=pretrained, freeze_early=freeze_early) for name in ["fine", "mid", "coarse"]
         })
         branch_dim = self.branches["fine"].out_dim
         self.fusion_gate = nn.Sequential(
@@ -123,6 +131,17 @@ class MultiResAttentionNet(nn.Module):
             concat = torch.cat([fine, mid, coarse], dim=1)
             weights = torch.softmax(self.fusion_gate(concat), dim=1)
         return weights
+
+    def get_param_groups(self, head_lr=5e-4, backbone_lr=5e-5, weight_decay=5e-4):
+        backbone_params = []
+        head_params = list(self.fusion_gate.parameters()) + list(self.classifier.parameters())
+        for branch in self.branches.values():
+            backbone_params += [p for p in branch.stem.parameters() if p.requires_grad]
+            head_params += [p for p in branch.attn.parameters() if p.requires_grad]
+        return [
+            {"params": backbone_params, "lr": backbone_lr, "weight_decay": weight_decay},
+            {"params": head_params, "lr": head_lr, "weight_decay": weight_decay},
+        ]
 
 
 class TimeFreqCoordAttention(nn.Module):
@@ -189,4 +208,19 @@ class MultiFeatureCoordNet(nn.Module):
         x = self.attn4(self.layer4(x))
         feat = self.pool(x).flatten(1)
         return self.classifier(feat)
+
+    def get_param_groups(self, head_lr=5e-4, backbone_lr=5e-5, weight_decay=5e-4):
+        backbone_modules = [self.conv1, self.bn1, self.layer1, self.layer2, self.layer3, self.layer4]
+        backbone_params = []
+        for m in backbone_modules:
+            backbone_params += [p for p in m.parameters() if p.requires_grad]
+        head_params = (
+            [p for p in self.attn3.parameters() if p.requires_grad]
+            + [p for p in self.attn4.parameters() if p.requires_grad]
+            + [p for p in self.classifier.parameters() if p.requires_grad]
+        )
+        return [
+            {"params": backbone_params, "lr": backbone_lr, "weight_decay": weight_decay},
+            {"params": head_params, "lr": head_lr, "weight_decay": weight_decay},
+        ]
 
