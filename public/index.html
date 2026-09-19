@@ -35,7 +35,7 @@
         <div class="model-selector-group">
           <label for="modelSelect" class="selector-label">Architecture:</label>
           <select id="modelSelect" class="model-select">
-            <option value="multifeature" selected>Multi-Feature Diff-Attn (71.5% - SOTA)</option>
+            <option value="multifeature" selected>Multi-Feature CoordNet (71.5% - Diff-Attn)</option>
             <option value="baseline">Baseline Single-Res CNN (71.0%)</option>
             <option value="multires">Multi-Res 3-Branch Net (65.5%)</option>
           </select>
@@ -272,14 +272,14 @@
           </div>
         </div>
 
-        <!-- Card 3: Multi-Feature (Winner) -->
+        <!-- Card 3: Multi-Feature (Diff-Attn) -->
         <div class="benchmark-card winner" id="cardMultiFeature">
           <div class="bench-header">
             <h4>Multi-Feature Attention</h4>
-            <span class="bench-tag green">Winning Architecture</span>
+            <span class="bench-tag green">Diff-Attn (+1.6% params)</span>
           </div>
           <div class="bench-stat-main green">71.50%</div>
-          <span class="bench-stat-sub">Test Accuracy (+0.50% vs Baseline)</span>
+          <span class="bench-stat-sub">Test Accuracy (Comparable at +1.6% params)</span>
           <div class="bench-details">
             <div class="bench-row"><span>Macro F1:</span><strong>0.7075</strong></div>
             <div class="bench-row"><span>Parameters:</span><strong>11.38 M</strong></div>

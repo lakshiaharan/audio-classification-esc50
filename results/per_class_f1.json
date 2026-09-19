@@ -1,0 +1,361 @@
+{
+  "model": "multifeature",
+  "checkpoint": "results/multifeature_best.pt",
+  "test_fold": 5,
+  "test_accuracy": 0.7225,
+  "macro_f1": 0.7169,
+  "top3_accuracy": 0.875,
+  "top5_accuracy": 0.92,
+  "per_class": {
+    "airplane": {
+      "class_id": 0,
+      "precision": 0.6667,
+      "recall": 0.5,
+      "f1_score": 0.5714,
+      "support": 8
+    },
+    "breathing": {
+      "class_id": 1,
+      "precision": 0.8,
+      "recall": 0.5,
+      "f1_score": 0.6154,
+      "support": 8
+    },
+    "brushing_teeth": {
+      "class_id": 2,
+      "precision": 0.875,
+      "recall": 0.875,
+      "f1_score": 0.875,
+      "support": 8
+    },
+    "can_opening": {
+      "class_id": 3,
+      "precision": 0.6667,
+      "recall": 0.75,
+      "f1_score": 0.7059,
+      "support": 8
+    },
+    "car_horn": {
+      "class_id": 4,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1_score": 0.6667,
+      "support": 8
+    },
+    "cat": {
+      "class_id": 5,
+      "precision": 0.6,
+      "recall": 0.75,
+      "f1_score": 0.6667,
+      "support": 8
+    },
+    "chainsaw": {
+      "class_id": 6,
+      "precision": 0.6667,
+      "recall": 0.75,
+      "f1_score": 0.7059,
+      "support": 8
+    },
+    "chirping_birds": {
+      "class_id": 7,
+      "precision": 0.8889,
+      "recall": 1.0,
+      "f1_score": 0.9412,
+      "support": 8
+    },
+    "church_bells": {
+      "class_id": 8,
+      "precision": 1.0,
+      "recall": 0.875,
+      "f1_score": 0.9333,
+      "support": 8
+    },
+    "clapping": {
+      "class_id": 9,
+      "precision": 0.5455,
+      "recall": 0.75,
+      "f1_score": 0.6316,
+      "support": 8
+    },
+    "clock_alarm": {
+      "class_id": 10,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 8
+    },
+    "clock_tick": {
+      "class_id": 11,
+      "precision": 0.5556,
+      "recall": 0.625,
+      "f1_score": 0.5882,
+      "support": 8
+    },
+    "coughing": {
+      "class_id": 12,
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1_score": 0.75,
+      "support": 8
+    },
+    "cow": {
+      "class_id": 13,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 8
+    },
+    "crackling_fire": {
+      "class_id": 14,
+      "precision": 0.625,
+      "recall": 0.625,
+      "f1_score": 0.625,
+      "support": 8
+    },
+    "crickets": {
+      "class_id": 15,
+      "precision": 0.8571,
+      "recall": 0.75,
+      "f1_score": 0.8,
+      "support": 8
+    },
+    "crow": {
+      "class_id": 16,
+      "precision": 0.5714,
+      "recall": 1.0,
+      "f1_score": 0.7273,
+      "support": 8
+    },
+    "crying_baby": {
+      "class_id": 17,
+      "precision": 0.8333,
+      "recall": 0.625,
+      "f1_score": 0.7143,
+      "support": 8
+    },
+    "dog": {
+      "class_id": 18,
+      "precision": 0.8333,
+      "recall": 0.625,
+      "f1_score": 0.7143,
+      "support": 8
+    },
+    "door_wood_creaks": {
+      "class_id": 19,
+      "precision": 0.8571,
+      "recall": 0.75,
+      "f1_score": 0.8,
+      "support": 8
+    },
+    "door_wood_knock": {
+      "class_id": 20,
+      "precision": 0.6667,
+      "recall": 0.5,
+      "f1_score": 0.5714,
+      "support": 8
+    },
+    "drinking_sipping": {
+      "class_id": 21,
+      "precision": 0.75,
+      "recall": 0.375,
+      "f1_score": 0.5,
+      "support": 8
+    },
+    "engine": {
+      "class_id": 22,
+      "precision": 0.7143,
+      "recall": 0.625,
+      "f1_score": 0.6667,
+      "support": 8
+    },
+    "fireworks": {
+      "class_id": 23,
+      "precision": 0.75,
+      "recall": 0.375,
+      "f1_score": 0.5,
+      "support": 8
+    },
+    "footsteps": {
+      "class_id": 24,
+      "precision": 0.5714,
+      "recall": 0.5,
+      "f1_score": 0.5333,
+      "support": 8
+    },
+    "frog": {
+      "class_id": 25,
+      "precision": 0.7,
+      "recall": 0.875,
+      "f1_score": 0.7778,
+      "support": 8
+    },
+    "glass_breaking": {
+      "class_id": 26,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 8
+    },
+    "hand_saw": {
+      "class_id": 27,
+      "precision": 0.8889,
+      "recall": 1.0,
+      "f1_score": 0.9412,
+      "support": 8
+    },
+    "helicopter": {
+      "class_id": 28,
+      "precision": 0.375,
+      "recall": 0.375,
+      "f1_score": 0.375,
+      "support": 8
+    },
+    "hen": {
+      "class_id": 29,
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1_score": 0.8571,
+      "support": 8
+    },
+    "insects": {
+      "class_id": 30,
+      "precision": 0.8,
+      "recall": 0.5,
+      "f1_score": 0.6154,
+      "support": 8
+    },
+    "keyboard_typing": {
+      "class_id": 31,
+      "precision": 0.3846,
+      "recall": 0.625,
+      "f1_score": 0.4762,
+      "support": 8
+    },
+    "laughing": {
+      "class_id": 32,
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1_score": 0.75,
+      "support": 8
+    },
+    "mouse_click": {
+      "class_id": 33,
+      "precision": 0.625,
+      "recall": 0.625,
+      "f1_score": 0.625,
+      "support": 8
+    },
+    "pig": {
+      "class_id": 34,
+      "precision": 1.0,
+      "recall": 0.375,
+      "f1_score": 0.5455,
+      "support": 8
+    },
+    "pouring_water": {
+      "class_id": 35,
+      "precision": 0.8889,
+      "recall": 1.0,
+      "f1_score": 0.9412,
+      "support": 8
+    },
+    "rain": {
+      "class_id": 36,
+      "precision": 0.875,
+      "recall": 0.875,
+      "f1_score": 0.875,
+      "support": 8
+    },
+    "rooster": {
+      "class_id": 37,
+      "precision": 0.8889,
+      "recall": 1.0,
+      "f1_score": 0.9412,
+      "support": 8
+    },
+    "sea_waves": {
+      "class_id": 38,
+      "precision": 0.875,
+      "recall": 0.875,
+      "f1_score": 0.875,
+      "support": 8
+    },
+    "sheep": {
+      "class_id": 39,
+      "precision": 0.6667,
+      "recall": 1.0,
+      "f1_score": 0.8,
+      "support": 8
+    },
+    "siren": {
+      "class_id": 40,
+      "precision": 0.7273,
+      "recall": 1.0,
+      "f1_score": 0.8421,
+      "support": 8
+    },
+    "sneezing": {
+      "class_id": 41,
+      "precision": 0.6364,
+      "recall": 0.875,
+      "f1_score": 0.7368,
+      "support": 8
+    },
+    "snoring": {
+      "class_id": 42,
+      "precision": 0.8571,
+      "recall": 0.75,
+      "f1_score": 0.8,
+      "support": 8
+    },
+    "thunderstorm": {
+      "class_id": 43,
+      "precision": 0.5385,
+      "recall": 0.875,
+      "f1_score": 0.6667,
+      "support": 8
+    },
+    "toilet_flush": {
+      "class_id": 44,
+      "precision": 0.8889,
+      "recall": 1.0,
+      "f1_score": 0.9412,
+      "support": 8
+    },
+    "train": {
+      "class_id": 45,
+      "precision": 0.8333,
+      "recall": 0.625,
+      "f1_score": 0.7143,
+      "support": 8
+    },
+    "vacuum_cleaner": {
+      "class_id": 46,
+      "precision": 0.6667,
+      "recall": 0.75,
+      "f1_score": 0.7059,
+      "support": 8
+    },
+    "washing_machine": {
+      "class_id": 47,
+      "precision": 0.5,
+      "recall": 0.625,
+      "f1_score": 0.5556,
+      "support": 8
+    },
+    "water_drops": {
+      "class_id": 48,
+      "precision": 0.4,
+      "recall": 0.25,
+      "f1_score": 0.3077,
+      "support": 8
+    },
+    "wind": {
+      "class_id": 49,
+      "precision": 0.375,
+      "recall": 0.375,
+      "f1_score": 0.375,
+      "support": 8
+    }
+  }
+}
