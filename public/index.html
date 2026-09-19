@@ -35,9 +35,9 @@
         <div class="model-selector-group">
           <label for="modelSelect" class="selector-label">Architecture:</label>
           <select id="modelSelect" class="model-select">
-            <option value="multifeature" selected>Multi-Feature CoordNet (71.5% - Diff-Attn)</option>
-            <option value="baseline">Baseline Single-Res CNN (71.0%)</option>
-            <option value="multires">Multi-Res 3-Branch Net (65.5%)</option>
+            <option value="multifeature" selected>Multi-Feature CoordNet (77.3% - Fine-Tuned Diff-Attn)</option>
+            <option value="baseline">Baseline Single-Res CNN (76.5% - Fine-Tuned)</option>
+            <option value="multires">Multi-Res 3-Branch Net (68.8% - Fine-Tuned)</option>
           </select>
         </div>
         <div class="status-pill online">
@@ -47,6 +47,16 @@
       </div>
     </div>
   </header>
+
+  <!-- Edge Demo Transparency Notice -->
+  <div class="demo-transparency-banner">
+    <div class="banner-content">
+      <span class="banner-icon">⚡</span>
+      <p>
+        <strong>Web Demo Architecture Notice:</strong> This Vercel deployment runs zero-binary in-browser WebAudio Mel spectral centroid matching (~7.3% Top-1 / ~25% Top-5 on Fold 5) for instant serverless edge execution without heavy PyTorch wheels. To run the full <strong>77.3% PyTorch deep CNN</strong> with native tensor inference, run <code>python server.py</code> locally.
+      </p>
+    </div>
+  </div>
 
   <!-- Main Content -->
   <main class="main-container">
@@ -219,7 +229,7 @@
           </div>
           <div class="spec-item">
             <span class="spec-name">ESC-50 Accuracy</span>
-            <strong class="spec-value highlight" id="specAcc">71.50%</strong>
+            <strong class="spec-value highlight" id="specAcc">77.25%</strong>
           </div>
           <div class="spec-item">
             <span class="spec-name">Inference Speed</span>
@@ -243,13 +253,13 @@
         <!-- Card 1: Baseline -->
         <div class="benchmark-card" id="cardBaseline">
           <div class="bench-header">
-            <h4>Baseline CNN</h4>
+            <h4>Baseline CNN (Fine-Tuned)</h4>
             <span class="bench-tag">Single-Res Mel</span>
           </div>
-          <div class="bench-stat-main">71.00%</div>
+          <div class="bench-stat-main">76.50%</div>
           <span class="bench-stat-sub">Test Accuracy</span>
           <div class="bench-details">
-            <div class="bench-row"><span>Macro F1:</span><strong>0.7006</strong></div>
+            <div class="bench-row"><span>Macro F1:</span><strong>0.7590</strong></div>
             <div class="bench-row"><span>Parameters:</span><strong>11.20 M</strong></div>
             <div class="bench-row"><span>Latency:</span><strong>12.75 ms</strong></div>
             <div class="bench-row"><span>Resolution:</span><strong>Mid (hop 512)</strong></div>
@@ -262,26 +272,26 @@
             <h4>Multi-Res 3-Branch</h4>
             <span class="bench-tag red">Ablation (Over-parameterized)</span>
           </div>
-          <div class="bench-stat-main">65.50%</div>
+          <div class="bench-stat-main">68.75%</div>
           <span class="bench-stat-sub">Test Accuracy</span>
           <div class="bench-details">
-            <div class="bench-row"><span>Macro F1:</span><strong>0.6481</strong></div>
+            <div class="bench-row"><span>Macro F1:</span><strong>0.6790</strong></div>
             <div class="bench-row"><span>Parameters:</span><strong>34.64 M</strong></div>
             <div class="bench-row"><span>Latency:</span><strong>22.03 ms</strong></div>
             <div class="bench-row"><span>Bottleneck:</span><strong>Downsampling Aliasing</strong></div>
           </div>
         </div>
 
-        <!-- Card 3: Multi-Feature (Diff-Attn) -->
+        <!-- Card 3: Multi-Feature (Headline Winner) -->
         <div class="benchmark-card winner" id="cardMultiFeature">
           <div class="bench-header">
             <h4>Multi-Feature Attention</h4>
-            <span class="bench-tag green">Diff-Attn (+1.6% params)</span>
+            <span class="bench-tag green">Fine-Tuned Headline (+1.6% params)</span>
           </div>
-          <div class="bench-stat-main green">71.50%</div>
-          <span class="bench-stat-sub">Test Accuracy (Comparable at +1.6% params)</span>
+          <div class="bench-stat-main green">77.25%</div>
+          <span class="bench-stat-sub">Test Accuracy (Headline Model)</span>
           <div class="bench-details">
-            <div class="bench-row"><span>Macro F1:</span><strong>0.7075</strong></div>
+            <div class="bench-row"><span>Macro F1:</span><strong>0.7680</strong></div>
             <div class="bench-row"><span>Parameters:</span><strong>11.38 M</strong></div>
             <div class="bench-row"><span>Latency:</span><strong>16.12 ms</strong></div>
             <div class="bench-row"><span>Dynamics:</span><strong>Static + Δ + Δ² with TF-Attn</strong></div>

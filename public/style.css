@@ -57,8 +57,41 @@ body {
 }
 
 /* ==========================================================================
-   Header
+   Header & Notice Banner
    ========================================================================== */
+
+.demo-transparency-banner {
+  background: rgba(99, 102, 241, 0.08);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 8px 24px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.banner-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.banner-icon {
+  font-size: 1.05rem;
+}
+
+.banner-content strong {
+  color: var(--text-primary);
+}
+
+.banner-content code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: #a5b4fc;
+}
 
 .app-header {
   background-color: rgba(15, 23, 42, 0.85);

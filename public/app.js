@@ -90,24 +90,24 @@ tabBtns.forEach(btn => {
 // Model Specifications Metadata
 const MODEL_SPECS = {
   multifeature: {
-    name: "MultiFeatureCoordNet",
-    badge: "Multi-Feature Diff-Attn",
+    name: "MultiFeatureCoordNet (Fine-Tuned)",
+    badge: "Fine-Tuned Diff-Attn",
     params: "11.38 Million",
-    acc: "71.50%",
+    acc: "77.25%",
     latency: "~16.1 ms/sample"
   },
   baseline: {
-    name: "SingleResCNN (ResNet-18)",
+    name: "SingleResCNN (Fine-Tuned)",
     badge: "Single-Res Baseline",
     params: "11.20 Million",
-    acc: "71.00%",
+    acc: "76.50%",
     latency: "~12.8 ms/sample"
   },
   multires: {
-    name: "MultiResAttentionNet (3-Branch)",
+    name: "MultiResAttentionNet (Fine-Tuned)",
     badge: "Multi-Res 3-Branch",
     params: "34.64 Million",
-    acc: "65.50%",
+    acc: "68.75%",
     latency: "~22.0 ms/sample"
   }
 };
