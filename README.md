@@ -1,10 +1,12 @@
 # Environmental Sound Classification on ESC-50
 
+[![Research Model: 76.8% 5-Fold CV](https://img.shields.io/badge/Research%20Model-76.8%25%205--Fold%20CV-2ea44f?style=for-the-badge&logo=pytorch&logoColor=white)](README.md#experimental-results--5-fold-cross-validation)
+[![Web Demo: Edge DSP Approx](https://img.shields.io/badge/Web%20Demo-Lightweight%20Edge%20DSP-0070f3?style=for-the-badge&logo=vercel&logoColor=white)](https://audio-classification-esc50.vercel.app)
+
 [![CI](https://github.com/lakshiaharan/audio-classification-esc50/actions/workflows/ci.yml/badge.svg)](https://github.com/lakshiaharan/audio-classification-esc50/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11-3776ab.svg)](https://www.python.org/)
-[![Vercel Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://audio-classification-esc50.vercel.app)
 
 > **GitHub Repository About Settings**:
 > - **Description**: *An end-to-end deep learning framework for environmental sound classification comparing multi-resolution STFTs, differential spectral velocities (Δ, Δ²), and coordinate attention on ESC-50.*
@@ -52,17 +54,17 @@ Environmental sound classification (ESC) presents distinctive challenges compare
 
 ## Inference Engine Architecture
 
-To balance deep learning model complexity with high-availability web deployment, this project implements a transparent multi-tier execution model:
+To balance deep learning research fidelity with lightweight web deployment constraints, this project implements a clear two-tier architecture:
 
-| Component | Runtime Environment | Model Engine | Primary Goal |
-| :--- | :--- | :--- | :--- |
-| **Local PyTorch Server (`server.py`)** | Local Python environment (CPU / CUDA) | Full PyTorch Deep Learning Checkpoints (`MultiFeatureCoordNet`, `SingleResCNN`) | Full-fidelity neural network inference with GPU acceleration support (**77.3% test accuracy**) |
-| **CLI Predictor (`src/predict.py`)** | Local CLI (Torch / TorchAudio) | Native PyTorch `.pt` Checkpoint Weights | Standalone audio batch scoring & research verification |
-| **Web Studio Demo (Vercel)** | Edge / Browser (Web Audio API) | Zero-Binary Spectral Centroid Matching (`api/mel_signatures.py`) | Sub-20ms edge inference without heavy 1GB+ C++ binary wheels on serverless |
+| System Tier | Engine & Runtime | Accuracy / Benchmark | Primary Purpose |
+| :--- | :--- | :---: | :--- |
+| 🔬 **Research Model (Core)** | **PyTorch Deep CNN** (`MultiFeatureCoordNet` / ResNet-18)<br>Local CPU / CUDA runtime | **76.80% 5-Fold CV**<br>(77.25% Fold 5 Test Accuracy) | Full-fidelity deep neural network training, 5-fold cross-validation, and local GPU/CPU inference (`src/train.py`, `server.py`). |
+| 🌐 **Web Demo (Online)** | **Client-Side Web Audio DSP** (`api/mel_signatures.py`)<br>Zero-binary browser execution | **Sub-20ms Latency**<br>(Edge Approximation) | Lightweight browser-based approximation for deployment constraints (Vercel serverless free-tier <50MB limits without heavy 1GB+ C++ binary wheels). |
 
-> [!NOTE]
-> **Web Demo vs. Local PyTorch Engine**:
-> Vercel Serverless free-tier deployments enforce a 250 MB uncompressed / 50 MB compressed bundle limit and lack pre-compiled C++ CUDA/PyTorch runtimes. The online demo at [audio-classification-esc50.vercel.app](https://audio-classification-esc50.vercel.app) uses client-side WebAudio feature extraction with precomputed 32-band spectral centroid matching (~7.3% Top-1 / ~25% Top-5 accuracy on Fold 5). To run the full **77.3% PyTorch deep neural networks** interactively, launch the local server with `python server.py`.
+> [!TIP]
+> **Research Model vs. Web Demo**:
+> - **PyTorch Research Model (76.80% 5-Fold CV / 77.25% Fold 5)**: The primary research contribution is the full deep neural network (`MultiFeatureCoordNet`). To evaluate or run the full 77%+ PyTorch deep neural network interactively with native tensor inference, launch the local server with `python server.py` or use the CLI `python src/predict.py`.
+> - **Web Demo (Edge Approximation)**: Because standard serverless hosts (Vercel) impose bundle limits and lack CUDA/PyTorch C++ runtimes, the online web app uses a lightweight client-side WebAudio approximation with 32-band spectral centroid matching for instant (<20ms) browser interaction.
 
 ---
 
